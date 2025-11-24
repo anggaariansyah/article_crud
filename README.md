@@ -62,7 +62,8 @@ server:
   port: 8080
 auth:
   username: admin
-  password: secret123
+  password: admin123
+```
 Cara Menjalankan
 1️⃣ Manual (Go + PostgreSQL)
 
@@ -83,3 +84,35 @@ go run main.go
 Server akan berjalan di http://localhost:8080
 
 Folder uploads/ menyimpan foto artikel
+
+2️⃣ Menggunakan Docker (Backend saja)
+
+Pastikan Docker & Docker Compose terinstall
+
+Jalankan:
+
+docker-compose up --build
+
+##CURL
+# GET all
+curl -u admin:admin123 http://localhost:8080/articles
+
+# GET by ID
+curl -u admin:admin123 http://localhost:8080/articles/1
+
+# Create
+curl -u admin:admin123 -X POST http://localhost:8080/articles \
+-F "title=Artikel Baru" \
+-F "content=Isi konten artikel" \
+-F "photos=@/path/to/photo1.jpg" \
+-F "photos=@/path/to/photo2.jpg"
+
+# Update
+curl -u admin:admin123 -X PUT http://localhost:8080/articles/1 \
+-F "title=Judul Update" \
+-F "content=Konten Update" \
+-F "photos=@/path/to/photo3.jpg"
+
+# Delete
+curl -u admin:admin123 -X DELETE http://localhost:8080/articles/1
+
