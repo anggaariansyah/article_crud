@@ -2,6 +2,7 @@ package repository
 
 import (
 	"article-crud/models"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -31,6 +32,12 @@ func (r *ArticleRepository) GetByID(id uint) (*models.Article, error) {
 }
 
 func (r *ArticleRepository) Create(article *models.Article) error {
+	var count int64
+	// cek apakah ada artikel dengan judul sama
+	r.DB.Model(&models.Article{}).Where("title = ?", article.Title).Count(&count)
+	if count > 0 {
+		return fmt.Errorf("artikel dengan judul '%s' sudah ada", article.Title)
+	}
 	return r.DB.Create(article).Error
 }
 
@@ -39,5 +46,10 @@ func (r *ArticleRepository) Update(article *models.Article) error {
 }
 
 func (r *ArticleRepository) Delete(id uint) error {
+	// hapus dulu semua photo terkait
+	if err := r.DB.Where("article_id = ?", id).Delete(&models.ArticlePhoto{}).Error; err != nil {
+		return err
+	}
+	// baru hapus artikelnya
 	return r.DB.Delete(&models.Article{}, id).Error
 }
