@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    container_name: article-backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./config.yaml:/app/config.yaml
+    environment:
+      - GIN_MODE=release
